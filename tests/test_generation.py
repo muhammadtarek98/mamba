@@ -6,7 +6,7 @@ from mamba_ssm.models.config_mamba import MambaConfig
 from mamba_ssm.utils.generation import InferenceParams
 
 import pytest
-
+import torchinfo
 from einops import rearrange, repeat
 
 
@@ -15,7 +15,6 @@ def test_generation():
     seqlen = 20
     device = "cuda"
     dtype = torch.float16
-
     config = MambaConfig(
         d_model=1024,
         n_layer=4,
@@ -63,6 +62,7 @@ def test_generation_varlen():
     torch.manual_seed(2357)
     model = MambaLMHeadModel(config, device=device, dtype=dtype)
     xs = [torch.randint(0, 1000, (1, seqlen), device=device, dtype=torch.long) for seqlen in seqlens]
+    print(model)
 
     # Reference 1: Forward pass with seq_idx
     x = torch.cat(xs, dim=1)
