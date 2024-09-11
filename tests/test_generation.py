@@ -5,7 +5,6 @@ from mamba_ssm.models.mixer_seq_simple import MambaLMHeadModel
 from mamba_ssm.models.config_mamba import MambaConfig
 from mamba_ssm.utils.generation import InferenceParams
 
-import pytest
 
 from einops import rearrange, repeat
 
@@ -98,14 +97,14 @@ def test_generation_varlen():
     logits = model(input_ids, inference_params=inference_params, seq_idx=seq_idx, cu_seqlens=cu_seqlens).logits
     logits = rearrange(logits[0, cu_seqlens[1:] - 1], "b d -> b 1 d")
     scores.append(logits)
-    # In practice we should sample. In this case we take from the teacher_output for testing
+    # In practice, we should sample. In this case we take from the teacher_output for testing
     sampled_tokens = rearrange(torch.stack([ids[0, -genlen] for ids in xs], dim=0), "b -> b 1")
     sequences.append(sampled_tokens)
     for i in range(1, genlen):
         inference_params.seqlen_offset += 1
         logits = model(sampled_tokens, inference_params=inference_params, num_last_tokens=1).logits
         scores.append(logits)
-        # In practice we should sample. In this case we take from the teacher_output for testing
+        # In practice, we should sample. In this case we take from the teacher_output for testing
         sampled_tokens = rearrange(torch.stack([ids[0, -genlen + i] for ids in xs], dim=0), "b -> b 1")
         sequences.append(sampled_tokens)
     out_varlen = torch.cat(scores, dim=1)

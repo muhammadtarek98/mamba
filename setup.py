@@ -354,7 +354,6 @@ setup(
     ),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    
     ext_modules=ext_modules,
     cmdclass={"bdist_wheel": CachedWheelsCommand, "build_ext": BuildExtension}
     if ext_modules
