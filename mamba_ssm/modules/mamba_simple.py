@@ -7,8 +7,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
+import torchinfo
 
 from einops import rearrange, repeat
+import torchinfo.layer_info
 
 from mamba_ssm.ops.selective_scan_interface import selective_scan_fn, mamba_inner_fn
 
@@ -131,7 +133,7 @@ class Mamba(nn.Module):
                 out, _, _ = self.step(hidden_states, conv_state, ssm_state)
                 return out
 
-        # We do matmul and transpose BLH -> HBL at the same time
+        # We do matmul and transpose BLH -> HBL at the same timeImportError: libcudart.so.12: cannot open shared object file: No such file or directory
         xz = rearrange(
             self.in_proj.weight @ rearrange(hidden_states, "b l d -> d (b l)"),
             "d (b l) -> b d l",
@@ -292,3 +294,6 @@ class Mamba(nn.Module):
                 conv_state.zero_()
                 ssm_state.zero_()
         return conv_state, ssm_state
+model=Mamba(d_model=10)
+x=torch.randn(size=(10,))
+torchinfo.summary(model=model,input_data=x)
