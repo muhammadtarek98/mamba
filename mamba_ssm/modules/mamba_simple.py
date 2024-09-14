@@ -296,4 +296,3 @@ class Mamba(nn.Module):
         return conv_state, ssm_state
 model=Mamba(d_model=10)
 x=torch.randn(size=(10,))
-torchinfo.summary(model=model,input_data=x)

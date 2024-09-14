@@ -16,7 +16,6 @@ classifiers = [
     "Operating System :: Unix"
 ]
 dependencies = [
-    "torch",
     "ninja",
     "einops",
     "triton",
